@@ -80,7 +80,7 @@ function App() {
     <div className="App container">
        <div className="row my-5">
         <div className="col-3">
-          <h1>Buscar Tarefas</h1>
+          <h2>Buscar Tarefas</h2>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -101,7 +101,7 @@ function App() {
       </div>
       <div className="row my-5">
         <div className="col">
-          <h1>TODO 1</h1>
+          <h2>To-Do 1</h2>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -122,7 +122,7 @@ function App() {
           </ul>
         </div>
         <div className="col">
-          <h1>TODO 2</h1>
+          <h2>To-Do 2</h2>
           <div className="input-group mb-3">
             <input
               type="text"
