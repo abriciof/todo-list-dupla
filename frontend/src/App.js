@@ -143,6 +143,12 @@ function App() {
           </ul>
         </div>
       </div>
+      <div className="row my-5">
+        <div className="col">
+          <p>Fabrício Guimarães - Sistemas Distribuídos 2024</p>
+        </div>
+      </div>
+
 
      
     </div>
