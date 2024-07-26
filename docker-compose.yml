@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  db1:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES1_USER}
+      POSTGRES_PASSWORD: ${POSTGRES1_PASSWORD}
+      POSTGRES_DB: ${POSTGRES1_DATABASE}
+    ports:
+      - "${POSTGRES1_PORT}:5432"
+    volumes:
+      - db1-data:/var/lib/postgresql/data
+      - ./db/tasks.sql:/docker-entrypoint-initdb.d/tasks.sql
+    networks:
+      - todo
+
+  db2:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES2_USER}
+      POSTGRES_PASSWORD: ${POSTGRES2_PASSWORD}
+      POSTGRES_DB: ${POSTGRES2_DATABASE}
+    ports:
+      - "${POSTGRES2_PORT}:5432"
+    volumes:
+      - db2-data:/var/lib/postgresql/data
+      - ./db/tasks.sql:/docker-entrypoint-initdb.d/tasks.sql
+    networks:
+      - todo
+
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend/src:/app/src
+    depends_on:
+      - db1
+      - db2
+    command: uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload
+    environment:
+      - DATABASE_URL1=postgresql://${POSTGRES1_USER}:${POSTGRES1_PASSWORD}@db1:5432/todo1
+      - DATABASE_URL2=postgresql://${POSTGRES2_USER}:${POSTGRES2_PASSWORD}@db2:5432/todo2
+    networks:
+      - todo
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+     - "${FRONTEND_PORT}:3001"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    command: npm start
+    networks:
+      - todo
+
+volumes:
+  db1-data:
+  db2-data:
+
+networks:
+  todo:
+    driver: bridge
